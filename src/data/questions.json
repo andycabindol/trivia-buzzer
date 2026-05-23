@@ -1,0 +1,13 @@
+[
+  {
+    "text": "Example: What is Andy's favorite city?",
+    "answer": "New York",
+    "points": 100,
+    "image": "example.jpg"
+  },
+  {
+    "text": "Example: What year did Andy graduate?",
+    "answer": "2026",
+    "points": 150
+  }
+]

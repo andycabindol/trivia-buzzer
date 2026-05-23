@@ -1,0 +1,12 @@
+# Optional: deploy via Render Dashboard → Blueprints → New Blueprint Instance
+services:
+  - type: web
+    name: trivia-buzzer
+    runtime: node
+    plan: starter
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    healthCheckPath: /
+    envVars:
+      - key: NODE_ENV
+        value: production

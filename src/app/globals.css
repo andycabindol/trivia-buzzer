@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #ffffff;
+  --text: #171717;
+  --muted: #737373;
+  --border: #e5e5e5;
+}
+
+html,
+body {
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--text);
+}
+
+@layer components {
+  .page {
+    @apply min-h-screen bg-white text-neutral-900;
+  }
+  .btn {
+    @apply w-full rounded-lg border border-neutral-300 bg-white px-4 py-3 text-center font-medium transition active:scale-[0.99];
+  }
+  .btn-primary {
+    @apply border-neutral-900 bg-neutral-900 text-white;
+  }
+  .input {
+    @apply w-full rounded-lg border border-neutral-300 bg-white px-4 py-3 text-neutral-900 placeholder:text-neutral-400 focus:border-neutral-900 focus:outline-none;
+  }
+}
