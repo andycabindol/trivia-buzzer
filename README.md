@@ -31,6 +31,18 @@ Open [http://localhost:3000](http://localhost:3000).
 
 Player sessions are stored in `localStorage` so refresh rejoins the same player.
 
+## UI animations
+
+Onboarding screens (landing, join flow, pre-game “You’re in!”) use subtle fade/translate motion. Buzzer, queue, host, and display views are **not** animated.
+
+Toggle all motion in `src/lib/animations.ts`:
+
+```ts
+export const ANIMATIONS_ENABLED = false; // set true to enable
+```
+
+Respects the user’s **Reduce Motion** system setting when enabled.
+
 ## Tech stack
 
 - Next.js 15, React 19, TypeScript, Tailwind CSS

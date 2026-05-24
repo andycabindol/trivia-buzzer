@@ -3,7 +3,9 @@
 import { Suspense, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
+import { Motion } from "@/components/Motion";
 import { useGameRoom } from "@/hooks/useGameRoom";
+import { motionStaggerDelay } from "@/lib/animations";
 import { emitAck } from "@/lib/socket";
 import { loadPlayerSession, savePlayerSession } from "@/lib/storage";
 import type { Team } from "@/lib/types";
@@ -56,7 +58,9 @@ function JoinFlow() {
   if (!ready || !room) {
     return (
       <main className="page flex items-center justify-center p-6">
-        <p className="text-neutral-400">Connecting…</p>
+        <Motion variant="fade-in">
+          <p className="text-neutral-400">Connecting…</p>
+        </Motion>
       </main>
     );
   }
@@ -64,57 +68,80 @@ function JoinFlow() {
   return (
     <main className="page p-6">
       <div className="mx-auto max-w-sm space-y-6">
-        {displayError && <p className="text-sm text-red-600">{displayError}</p>}
+        {displayError && (
+          <Motion variant="fade-in">
+            <p className="text-sm text-red-600">{displayError}</p>
+          </Motion>
+        )}
 
         {step === "team" && (
-          <div className="space-y-3">
-            <p className="text-center text-neutral-500">Pick your table</p>
+          <Motion key="join-team" variant="fade-up" className="space-y-3">
+            <Motion variant="fade-in">
+              <p className="text-center text-neutral-500">Pick your table</p>
+            </Motion>
             {room.teams.length === 0 ? (
-              <p className="text-center text-sm text-neutral-400">
-                Waiting for the host to add tables…
-              </p>
+              <Motion variant="fade-in" delay={80}>
+                <p className="text-center text-sm text-neutral-400">
+                  Waiting for the host to add tables…
+                </p>
+              </Motion>
             ) : (
-              room.teams.map((team) => (
-                <button
+              room.teams.map((team, index) => (
+                <Motion
                   key={team.id}
-                  type="button"
-                  onClick={() => {
-                    setSelectedTeam(team);
-                    setStep("name");
-                  }}
-                  className="btn text-lg"
+                  variant="fade-up"
+                  delay={motionStaggerDelay(index, 40)}
                 >
-                  {team.name}
-                </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedTeam(team);
+                      setStep("name");
+                    }}
+                    className="btn text-lg"
+                  >
+                    {team.name}
+                  </button>
+                </Motion>
               ))
             )}
-          </div>
+          </Motion>
         )}
 
         {step === "name" && selectedTeam && (
-          <form onSubmit={handleJoin} className="space-y-4">
-            <p className="text-center text-neutral-500">{selectedTeam.name}</p>
-            <input
-              value={playerName}
-              onChange={(e) => setPlayerName(e.target.value)}
-              placeholder="Your name"
-              className="input text-center text-xl"
-              autoFocus
-            />
-            <button type="submit" disabled={loading} className="btn btn-primary">
-              Join
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setStep("team");
-                setSelectedTeam(null);
-              }}
-              className="w-full text-sm text-neutral-500 underline"
-            >
-              Back
-            </button>
-          </form>
+          <Motion key="join-name" variant="fade-up">
+            <form onSubmit={handleJoin} className="space-y-4">
+              <Motion variant="fade-down">
+                <p className="text-center text-neutral-500">{selectedTeam.name}</p>
+              </Motion>
+              <Motion variant="fade-up" delay={50}>
+                <input
+                  value={playerName}
+                  onChange={(e) => setPlayerName(e.target.value)}
+                  placeholder="Your name"
+                  className="input text-center text-xl"
+                  autoFocus
+                />
+              </Motion>
+              <Motion variant="fade-up" delay={100}>
+                <button type="submit" disabled={loading} className="btn btn-primary">
+                  Join
+                </button>
+              </Motion>
+              <Motion variant="fade-in" delay={140}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setStep("team");
+                    setSelectedTeam(null);
+                  }}
+                  className="w-full text-sm text-neutral-500 underline"
+                >
+                  Back
+                </button>
+              </Motion>
+            </form>
+          </Motion>
         )}
       </div>
     </main>

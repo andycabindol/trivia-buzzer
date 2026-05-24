@@ -1,6 +1,60 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import type { Player, Team } from "@/lib/types";
+import { useMotionEnabled } from "@/hooks/useMotionEnabled";
+
+function easeOutCubic(t: number): number {
+  return 1 - Math.pow(1 - t, 3);
+}
+
+function AnimatedNumber({ value }: { value: number }) {
+  const motion = useMotionEnabled();
+  const [display, setDisplay] = useState(value);
+  const rafRef = useRef<number | null>(null);
+  const fromRef = useRef(value);
+  const startedAtRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    if (!motion) {
+      setDisplay(value);
+      fromRef.current = value;
+      return;
+    }
+
+    const from = fromRef.current;
+    const to = value;
+    if (from === to) return;
+
+    const delta = Math.abs(to - from);
+    const durationMs = Math.min(3200, 550 + delta * 22);
+    startedAtRef.current = null;
+
+    const tick = (now: number) => {
+      if (startedAtRef.current === null) startedAtRef.current = now;
+      const tRaw = (now - startedAtRef.current) / durationMs;
+      const t = Math.min(1, Math.max(0, tRaw));
+      const eased = easeOutCubic(t);
+      const next = from + Math.round((to - from) * eased);
+      setDisplay(next);
+      if (t < 1) {
+        rafRef.current = requestAnimationFrame(tick);
+      } else {
+        fromRef.current = to;
+        rafRef.current = null;
+      }
+    };
+
+    if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    rafRef.current = requestAnimationFrame(tick);
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      rafRef.current = null;
+    };
+  }, [motion, value]);
+
+  return <>{display}</>;
+}
 
 type Props = {
   teams: Team[];
@@ -59,7 +113,9 @@ export function Scoreboard({
                 {index + 1}
               </span>
               <span className={`${rowClass} min-w-0 truncate text-left`}>{team.name}</span>
-              <span className={`${rowClass} text-right tabular-nums`}>{team.score}</span>
+              <span className={`${rowClass} text-right tabular-nums`}>
+                <AnimatedNumber value={team.score} />
+              </span>
             </li>
           ))}
         </ul>
@@ -91,7 +147,9 @@ export function Scoreboard({
                 )}
                 <span className="min-w-0 truncate text-left">{team.name}</span>
                 <span className="text-right tabular-nums text-neutral-500">{playerCount}</span>
-                <span className="text-right tabular-nums">{team.score}</span>
+                <span className="text-right tabular-nums">
+                  <AnimatedNumber value={team.score} />
+                </span>
               </li>
             );
           })}
@@ -117,7 +175,9 @@ export function Scoreboard({
             </span>
           )}
           <span className="min-w-0 flex-1 truncate text-left">{team.name}</span>
-          <span className="shrink-0 tabular-nums text-right">{team.score}</span>
+          <span className="shrink-0 tabular-nums text-right">
+            <AnimatedNumber value={team.score} />
+          </span>
         </li>
       ))}
     </ul>
