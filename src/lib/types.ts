@@ -85,3 +85,8 @@ export function getCurrentAnsweringEntry(room: RoomState): BuzzEntry | null {
   if (room.buzzerQueue.length === 0) return null;
   return room.buzzerQueue[room.currentQueueIndex] ?? null;
 }
+
+export function getTeamQueuePosition(room: RoomState, teamId: string): number | null {
+  const index = room.buzzerQueue.findIndex((b) => b.teamId === teamId);
+  return index === -1 ? null : index + 1;
+}

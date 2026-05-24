@@ -220,8 +220,18 @@ export function setupSocketHandlers(io: Server): void {
         return ack?.({ ok: false, error: "Not registered as player" });
       }
       const result = rooms.registerBuzz(playerId);
-      if (result.ok) broadcastRoom(io);
-      ack?.(result.ok ? { ok: true, data: { position: result.position } } : { ok: false, error: result.error });
+      if (result.ok && result.changed) broadcastRoom(io);
+      ack?.(
+        result.ok
+          ? {
+              ok: true,
+              data: {
+                position: result.position,
+                teamAlreadyQueued: result.teamAlreadyQueued,
+              },
+            }
+          : { ok: false, error: result.error }
+      );
     });
 
     socket.on("room:get", (_p, ack) => {

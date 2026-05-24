@@ -25,7 +25,7 @@ Open [http://localhost:3000](http://localhost:3000).
 2. **Display** opens `/display` on the projector.
 3. **Players** go to `/join`, pick or create a table, enter their name.
 4. Host adds questions, starts the game, shows each question, and **opens the buzzer**.
-5. Players tap the big red buzzer; first buzz wins the queue (one buzz per team per question).
+5. Players tap the big red buzzer to join the queue (first buzz per **table/team** counts; teammates can still tap but only lock in their team’s slot; buzzer stays open until the host judges).
 6. Host marks **Correct** (team gets points) or **Incorrect** (next in queue gets a turn).
 7. Host ends the game — display shows the winner.
 

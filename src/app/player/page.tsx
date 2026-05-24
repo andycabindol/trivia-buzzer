@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useGameRoom } from "@/hooks/useGameRoom";
 import { emitAck } from "@/lib/socket";
 import { loadPlayerSession } from "@/lib/storage";
+import { getTeamQueuePosition } from "@/lib/types";
 
 export default function PlayerPage() {
   const router = useRouter();
@@ -12,6 +13,7 @@ export default function PlayerPage() {
   const [session, setSession] = useState(loadPlayerSession);
   const [buzzed, setBuzzed] = useState(false);
   const [queuePosition, setQueuePosition] = useState<number | null>(null);
+  const [teamAlreadyQueued, setTeamAlreadyQueued] = useState(false);
   const [buzzing, setBuzzing] = useState(false);
 
   useEffect(() => {
@@ -28,21 +30,27 @@ export default function PlayerPage() {
 
   const playerId = session?.playerId;
 
+  const teamId = session?.teamId;
+
   useEffect(() => {
-    if (!room || !playerId) return;
-    const inQueue = room.buzzerQueue.find((b) => b.playerId === playerId);
-    if (inQueue) {
+    if (!room || !playerId || !teamId) return;
+    const teamPosition = getTeamQueuePosition(room, teamId);
+    const isFirstBuzzForTeam = room.buzzerQueue.some((b) => b.playerId === playerId);
+    if (isFirstBuzzForTeam && teamPosition !== null) {
       setBuzzed(true);
-      setQueuePosition(room.buzzerQueue.findIndex((b) => b.playerId === playerId) + 1);
+      setQueuePosition(teamPosition);
+      setTeamAlreadyQueued(false);
     } else if (!room.buzzerOpen) {
       setBuzzed(false);
       setQueuePosition(null);
+      setTeamAlreadyQueued(false);
     }
-  }, [room, playerId]);
+  }, [room, playerId, teamId]);
 
   useEffect(() => {
     setBuzzed(false);
     setQueuePosition(null);
+    setTeamAlreadyQueued(false);
     setBuzzing(false);
   }, [room?.currentQuestionIndex]);
 
@@ -52,18 +60,23 @@ export default function PlayerPage() {
     if (typeof navigator !== "undefined" && navigator.vibrate) {
       navigator.vibrate(80);
     }
-    const res = await emitAck<{ position: number }>("player:buzz");
+    const res = await emitAck<{ position: number; teamAlreadyQueued?: boolean }>(
+      "player:buzz"
+    );
     setBuzzing(false);
     if (res.ok && res.data?.position) {
       setBuzzed(true);
       setQueuePosition(res.data.position);
+      setTeamAlreadyQueued(Boolean(res.data.teamAlreadyQueued));
     }
   }, [playerId, buzzing, buzzed, room?.buzzerOpen]);
 
   if (!session) return null;
 
+  const inLobby =
+    !room || room.currentQuestionIndex < 0 || room.status === "lobby";
   const canBuzz = room?.buzzerOpen && !buzzed && !buzzing;
-  const showBuzzer = room?.buzzerOpen || buzzed;
+  const showBuzzer = !inLobby && (room?.buzzerOpen || buzzed);
 
   return (
     <main className="page flex flex-col">
@@ -85,11 +98,18 @@ export default function PlayerPage() {
               {buzzed ? "Locked" : "Buzz"}
             </button>
             {buzzed && queuePosition !== null && (
-              <p className="mt-6 text-lg text-neutral-600">#{queuePosition} in queue</p>
+              <p className="mt-6 text-center text-lg text-neutral-600">
+                {teamAlreadyQueued
+                  ? `Your team is #${queuePosition} in queue`
+                  : `#${queuePosition} in queue`}
+              </p>
             )}
           </>
         ) : (
-          <p className="text-xl text-neutral-400">Wait…</p>
+          <div className="text-center">
+            <p className="text-4xl font-semibold text-neutral-900">You&apos;re in! 🎉</p>
+            <p className="mt-2 text-sm text-neutral-500">Waiting for others to join</p>
+          </div>
         )}
       </div>
     </main>

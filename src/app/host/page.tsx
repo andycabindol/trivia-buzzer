@@ -128,8 +128,8 @@ export default function HostPage() {
 
         {answerer && (
           <p className="text-center text-lg">
-            {answerer.playerName} <span className="text-neutral-400">·</span>{" "}
-            {answerer.teamName}
+            {answerer.teamName}{" "}
+            <span className="text-neutral-400">·</span> {answerer.playerName}
           </p>
         )}
 

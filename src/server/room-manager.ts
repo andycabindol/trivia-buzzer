@@ -9,7 +9,11 @@ import type {
 import { DEFAULT_HONOREE_NAME } from "@/lib/constants";
 import { DEFAULT_TABLE_NAMES } from "@/lib/default-teams";
 import { loadPresetQuestionsFromFile } from "@/lib/preset-questions";
-import { getCurrentAnsweringEntry, getCurrentQuestion } from "@/lib/types";
+import {
+  getCurrentAnsweringEntry,
+  getCurrentQuestion,
+  getTeamQueuePosition,
+} from "@/lib/types";
 
 export const GAME_ROOM_ID = "GAME";
 
@@ -302,21 +306,31 @@ export function resetBuzzerQueue(): { ok: boolean; error?: string } {
   return { ok: true };
 }
 
-export function registerBuzz(
-  playerId: string
-): { ok: boolean; position?: number; error?: string } {
+export function registerBuzz(playerId: string): {
+  ok: boolean;
+  position?: number;
+  teamAlreadyQueued?: boolean;
+  changed?: boolean;
+  error?: string;
+} {
   const room = getRoom();
   if (!room.buzzerOpen) return { ok: false, error: "Buzzer is closed" };
 
   const player = room.players.find((p) => p.id === playerId);
   if (!player) return { ok: false, error: "Player not found" };
 
-  const alreadyBuzzed = room.buzzerQueue.some((b) => b.playerId === playerId);
-  if (alreadyBuzzed) return { ok: false, error: "Already buzzed" };
-
-  const teamAlreadyInQueue = room.buzzerQueue.some((b) => b.teamId === player.teamId);
-  if (teamAlreadyInQueue) {
-    return { ok: false, error: "Someone from your team already buzzed" };
+  const teamPosition = getTeamQueuePosition(room, player.teamId);
+  if (teamPosition !== null) {
+    const teamEntry = room.buzzerQueue.find((b) => b.teamId === player.teamId);
+    if (teamEntry?.playerId === playerId) {
+      return { ok: false, error: "Already buzzed" };
+    }
+    return {
+      ok: true,
+      position: teamPosition,
+      teamAlreadyQueued: true,
+      changed: false,
+    };
   }
 
   const entry: BuzzEntry = {
@@ -329,13 +343,8 @@ export function registerBuzz(
   room.buzzerQueue.push(entry);
   const position = room.buzzerQueue.length;
 
-  if (position === 1) {
-    room.status = "answering";
-    room.buzzerOpen = false;
-  }
-
   saveRoom(room);
-  return { ok: true, position };
+  return { ok: true, position, changed: true };
 }
 
 function revealAnswerIfAvailable(room: RoomState): void {

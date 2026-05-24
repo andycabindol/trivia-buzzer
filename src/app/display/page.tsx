@@ -38,14 +38,14 @@ function BuzzQueue({ queue, currentQueueIndex, status }: {
       </p>
       <ul className="space-y-2 text-left">
         {queue.map((entry, index) => (
-          <li key={`${entry.playerId}-${entry.timestamp}`}>
+          <li key={`${entry.teamId}-${entry.timestamp}`}>
             <p className="text-xs text-neutral-400">
               {getQueueLabel(index, currentQueueIndex, status)}
             </p>
-            <p className="text-sm font-medium leading-tight md:text-base">
-              {entry.playerName}
-              <span className="font-normal text-neutral-500"> · {entry.teamName}</span>
+            <p className="text-sm font-semibold leading-tight md:text-base">
+              {entry.teamName}
             </p>
+            <p className="text-xs text-neutral-500 md:text-sm">{entry.playerName}</p>
           </li>
         ))}
       </ul>
@@ -153,15 +153,15 @@ function DisplayContent() {
             <h1 className="text-4xl font-bold leading-tight md:text-6xl lg:text-7xl">
               {question.text}
             </h1>
-            {answerer && room.status !== "feedback" && (
+            {answerer && room.status !== "feedback" && room.status !== "buzzer_open" && (
               <div className="mt-12">
-                <p className="text-5xl font-bold md:text-6xl">{answerer.playerName}</p>
+                <p className="text-5xl font-bold md:text-6xl">{answerer.teamName}</p>
                 <p className="mt-2 text-3xl text-neutral-500 md:text-4xl">
-                  {answerer.teamName}
+                  {answerer.playerName}
                 </p>
               </div>
             )}
-            {room.buzzerOpen && !answerer && (
+            {room.buzzerOpen && (
               <p className="mt-10 text-3xl font-semibold text-red-600 md:text-4xl">
                 Buzz in!
               </p>
