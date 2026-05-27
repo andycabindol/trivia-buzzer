@@ -1,6 +1,6 @@
 # Trivia Buzzer — Grad Party Edition
 
-A realtime party trivia buzzer game: guests join from their phones, pick a table/team, and buzz in. The host runs the game; a projector shows the question, scores, and buzz queue.
+A realtime party trivia buzzer game: guests join from their phones, pick a table/team, and buzz in. The host runs the game from their phone—questions stay on the host screen only; players see the buzzer, revealed answers, and scores.
 
 ## Quick start
 
@@ -13,27 +13,26 @@ Open [http://localhost:3000](http://localhost:3000).
 
 | Route | Who |
 |-------|-----|
-| `/` | Landing — Join, Host, or Display |
+| `/` | Landing — Join or Host |
 | `/join` | Players — pick table → name |
-| `/player` | Player buzzer (phone) |
-| `/host` | Host controls |
-| `/display` | Big-screen projector view |
+| `/player` | Player phone (buzzer, answers, scores) |
+| `/host` | Host phone (questions & controls) |
 
 ## How to play
 
-1. **Host** opens `/host` on your laptop (runs the game server).
-2. **Display** opens `/display` on the projector.
-3. **Players** go to `/join`, pick or create a table, enter their name.
-4. Host adds questions, starts the game, shows each question, and **opens the buzzer**.
-5. Players tap the big red buzzer to join the queue (first buzz per **table/team** counts; teammates can still tap but only lock in their team’s slot; buzzer stays open until the host judges).
-6. Host marks **Correct** (team gets points) or **Incorrect** (next in queue gets a turn).
-7. Host ends the game — display shows the winner.
+1. **Host** opens `/host` on their phone (runs the game server when self-hosting locally).
+2. **Players** go to `/join`, pick a table, and enter their name.
+3. Host adds questions, starts the game, and taps **Next question** (only the host sees the question).
+4. Players tap the big red buzzer to join the queue (first buzz per **table/team** counts; teammates can still tap but only lock in their team’s slot).
+5. Host marks **Correct** (team gets points) or **Incorrect** (next in queue gets a turn). Players see the **answer** on their phones when it is revealed—not the question text.
+6. Host **holds “Show scores”** to flash a full-screen scoreboard on every player’s phone (their table is highlighted).
+7. Host **Choose winner** when the game ends—players see the result on their phones too.
 
 Player sessions are stored in `localStorage` so refresh rejoins the same player.
 
 ## UI animations
 
-Onboarding screens (landing, join flow, pre-game “You’re in!”) use subtle fade/translate motion. Buzzer, queue, host, and display views are **not** animated.
+Onboarding screens (landing, join flow, pre-game “You’re in!”) use subtle fade/translate motion. Buzzer, queue, and gameplay views are **not** animated.
 
 Toggle all motion in `src/lib/animations.ts`:
 
@@ -90,7 +89,6 @@ At your DNS host (Cloudflare, Namecheap, etc.):
 
 - **Players:** `https://buzzer.yourdomain.com/join`
 - **Host:** `https://buzzer.yourdomain.com/host`
-- **Projector:** `https://buzzer.yourdomain.com/display`
 
 Edit `src/data/questions.json` and add images under `public/questions/` **before** you deploy (or redeploy after changes).
 
@@ -117,7 +115,7 @@ Edit **`src/data/questions.json`** before the party:
 
 - Put images in **`public/questions/`** (reference by filename like `"pizza.jpg"`).
 - On the host, open **Questions & setup** → **Import from questions.json** (lobby only, replaces all questions).
-- The image shows on the **display** when the answer is revealed.
+- The image shows on **players’ phones** when the answer is revealed.
 
 You can still add or edit questions manually in the host UI.
 

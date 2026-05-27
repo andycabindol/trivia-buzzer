@@ -15,4 +15,4 @@ In `src/data/questions.json`, reference them by filename:
 
 Or use a full path: `"image": "/questions/andy-photo.jpg"`
 
-Images appear on the **display** when the answer is revealed (correct or queue exhausted).
+Images appear on **players’ phones** when the answer is revealed (correct or queue exhausted).

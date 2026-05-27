@@ -7,7 +7,6 @@ import { motionStaggerDelay } from "@/lib/animations";
 const links = [
   { href: "/join", label: "Join", primary: true },
   { href: "/host", label: "Host", primary: false },
-  { href: "/display", label: "Display", primary: false },
 ] as const;
 
 export default function HomePage() {

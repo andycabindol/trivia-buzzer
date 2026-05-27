@@ -3,7 +3,7 @@ export type Question = {
   text: string;
   answer?: string;
   points: number;
-  /** Shown on display when the answer is revealed */
+  /** Shown on players' phones when the answer is revealed */
   imageUrl?: string;
 };
 
@@ -38,7 +38,7 @@ export type GameStatus =
   | "feedback"
   | "ended";
 
-/** Set when the official answer should be revealed on the display */
+/** Set when the official answer should be revealed to players */
 export type FeedbackType = "answer" | null;
 
 export type RoomState = {
@@ -65,7 +65,7 @@ export type PlayerSession = {
   teamName: string;
 };
 
-export type ClientRole = "player" | "host" | "display";
+export type ClientRole = "player" | "host";
 
 export function getPublicRoomState(room: RoomState): RoomState {
   return { ...room };

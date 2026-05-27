@@ -5,7 +5,7 @@ import * as rooms from "./room-manager";
 import { GAME_ROOM_ID } from "./room-manager";
 
 type SocketMeta = {
-  role?: "player" | "host" | "display";
+  role?: "player" | "host";
   playerId?: string;
   inRoom?: boolean;
 };
@@ -26,14 +26,14 @@ function broadcastRoom(io: Server): void {
   io.to(GAME_ROOM_ID).emit("room:update", getPublicRoomState(room));
 }
 
-function joinGameSocket(socket: Socket, role: "player" | "host" | "display"): void {
+function joinGameSocket(socket: Socket, role: "player" | "host"): void {
   socket.join(GAME_ROOM_ID);
   setMeta(socket, { role, inRoom: true });
 }
 
 function connectToGame(
   socket: Socket,
-  role: "player" | "host" | "display"
+  role: "player" | "host"
 ): { room: ReturnType<typeof getPublicRoomState> } {
   rooms.getOrCreateGameRoom();
   joinGameSocket(socket, role);
@@ -50,7 +50,7 @@ export function setupSocketHandlers(io: Server): void {
       broadcastRoom(io);
     });
 
-    socket.on("room:join", (payload: { role: "player" | "host" | "display" }, ack) => {
+    socket.on("room:join", (payload: { role: "player" | "host" }, ack) => {
       const role = payload?.role;
       if (!role) {
         ack?.({ ok: false, error: "Role required" });

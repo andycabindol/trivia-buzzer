@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import Link from "next/link";
 import { HoldToShowScores } from "@/components/HoldToShowScores";
 import { Scoreboard } from "@/components/Scoreboard";
 import { useGameRoom } from "@/hooks/useGameRoom";
@@ -107,12 +106,7 @@ export default function HostPage() {
   return (
     <main className="page p-4 pb-8">
       <div className="mx-auto max-w-md space-y-6">
-        <div className="text-center">
-          <p className="text-sm text-neutral-500">Host</p>
-          <Link href="/display" className="text-sm text-neutral-500 underline">
-            Open display
-          </Link>
-        </div>
+        <p className="text-center text-sm text-neutral-500">Host</p>
 
         {error && <p className="text-center text-sm text-red-600">{error}</p>}
 

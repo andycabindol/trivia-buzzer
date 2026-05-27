@@ -3,12 +3,13 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Motion } from "@/components/Motion";
+import { PlayerAnswerReveal } from "@/components/PlayerAnswerReveal";
 import { PlayerBuzzQueue } from "@/components/PlayerBuzzQueue";
 import { Scoreboard } from "@/components/Scoreboard";
 import { useGameRoom } from "@/hooks/useGameRoom";
 import { emitAck } from "@/lib/socket";
 import { loadPlayerSession } from "@/lib/storage";
-import { getTeamQueuePosition } from "@/lib/types";
+import { getCurrentQuestion, getTeamQueuePosition } from "@/lib/types";
 
 export default function PlayerPage() {
   const router = useRouter();
@@ -35,7 +36,6 @@ export default function PlayerPage() {
   }, [joinRoom, router]);
 
   const playerId = session?.playerId;
-
   const teamId = session?.teamId;
 
   useEffect(() => {
@@ -77,22 +77,6 @@ export default function PlayerPage() {
     }
   }, [playerId, buzzing, buzzed, room?.buzzerOpen]);
 
-  if (!session) return null;
-
-  const inLobby =
-    !room || room.currentQuestionIndex < 0 || room.status === "lobby";
-  const canBuzz = room?.buzzerOpen && !buzzed && !buzzing;
-  const showBuzzer = !inLobby && (room?.buzzerOpen || buzzed);
-  const betweenQuestions =
-    !!room &&
-    room.status !== "lobby" &&
-    room.status !== "ended" &&
-    room.currentQuestionIndex >= 0 &&
-    !showBuzzer;
-
-  const teamQueuePosition =
-    room && teamId ? getTeamQueuePosition(room, teamId) : null;
-
   useEffect(() => {
     if (!room || !teamId) return;
     const team = room.teams.find((t) => t.id === teamId);
@@ -119,21 +103,70 @@ export default function PlayerPage() {
     };
   }, []);
 
+  if (!session) return null;
+
+  const question = room ? getCurrentQuestion(room) : null;
+  const showAnswer =
+    !!room && room.feedback === "answer" && !!question?.answer?.trim();
+  const winnerTeam =
+    room?.winnerTeamId && room.teams.find((t) => t.id === room.winnerTeamId);
+
+  const inLobby =
+    !room || room.currentQuestionIndex < 0 || room.status === "lobby";
+  const canBuzz = room?.buzzerOpen && !buzzed && !buzzing;
+  const showBuzzer =
+    !inLobby && !showAnswer && (room?.buzzerOpen || buzzed);
+  const betweenQuestions =
+    !!room &&
+    !showAnswer &&
+    room.status !== "lobby" &&
+    room.status !== "ended" &&
+    room.currentQuestionIndex >= 0 &&
+    !showBuzzer;
+
+  const teamQueuePosition =
+    room && teamId ? getTeamQueuePosition(room, teamId) : null;
+
   return (
-    <main className="page flex flex-col">
+    <main className="page relative flex flex-col">
+      {room?.showScoresOverlay && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-white p-6">
+          <Scoreboard
+            teams={room.teams}
+            overlay
+            highlightTeamId={session.teamId}
+          />
+        </div>
+      )}
+
       <div className="border-b border-neutral-200 px-4 py-3 text-center text-sm text-neutral-500">
         {session.playerName} · {session.teamName}
       </div>
 
       <div className="flex min-h-0 flex-1 flex-col">
-        {pointsToast !== null && (
-          <div className="pointer-events-none fixed left-1/2 top-5 z-50 -translate-x-1/2">
+        {pointsToast !== null && !room?.showScoresOverlay && (
+          <div className="pointer-events-none fixed left-1/2 top-5 z-40 -translate-x-1/2">
             <div className="rounded-full bg-emerald-50 px-4 py-2 text-center text-lg font-semibold text-emerald-700 shadow-sm">
               +{pointsToast} points!
             </div>
           </div>
         )}
-        {showBuzzer ? (
+
+        {room?.status === "ended" && winnerTeam ? (
+          <div className="flex flex-1 flex-col items-center justify-center gap-4 p-6 text-center">
+            <p className="text-lg font-medium tabular-nums text-amber-600">
+              {winnerTeam.score} points
+            </p>
+            <p className="text-2xl font-semibold">
+              Team {winnerTeam.name} knows {room.honoreeName} best!
+            </p>
+            {session.teamId === winnerTeam.id && (
+              <p className="text-neutral-500">That&apos;s your table!</p>
+            )}
+          </div>
+        ) : showAnswer && question ? (
+          <PlayerAnswerReveal question={question} />
+        ) : showBuzzer ? (
           <div className="flex flex-1 flex-col items-center justify-center p-6">
             <button
               type="button"

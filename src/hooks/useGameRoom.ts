@@ -31,7 +31,7 @@ export function useGameRoom() {
     };
   }, []);
 
-  const joinRoom = useCallback(async (role: "player" | "host" | "display") => {
+  const joinRoom = useCallback(async (role: "player" | "host") => {
     const res = await emitAck<{ room: RoomState }>("room:join", { role });
     if (!res.ok) {
       setError(res.error ?? "Failed to connect");
