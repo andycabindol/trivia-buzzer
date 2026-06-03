@@ -1,127 +1,112 @@
 [
   {
-    "text": "What is the capital of Australia?",
-    "answer": "Canberra",
+    "text": "What university did Andy graduate from?",
+    "answer": "New York University (NYU)",
+    "points": 0
+  },
+  {
+    "text": "How old is Andy?",
+    "answer": "22 years old",
+    "points": 0
+  },
+  {
+    "text": "Name Andy's hometown.",
+    "answer": "Algonquin, Illinois",
     "points": 100
   },
   {
-    "text": "Which planet is known as the Red Planet?",
-    "answer": "Mars",
+    "text": "What high school did Andy attend?",
+    "answer": "Jacobs High School",
     "points": 100
   },
   {
-    "text": "How many sides does a hexagon have?",
-    "answer": "6",
+    "text": "What was Andy's major at NYU?",
+    "answer": "Interactive Media Arts",
     "points": 100
   },
   {
-    "text": "What is the largest ocean on Earth?",
-    "answer": "Pacific Ocean",
+    "text": "What was the name of the acapella group that Andy was the beatboxer for?",
+    "answer": "Vocollision",
     "points": 100
   },
   {
-    "text": "Who painted the Mona Lisa?",
-    "answer": "Leonardo da Vinci",
+    "text": "In which NYC borough did Andy spend most of his time as an Interactive Media Arts major?",
+    "answer": "Brooklyn",
     "points": 100
   },
   {
-    "text": "What is the chemical symbol for gold?",
-    "answer": "Au",
-    "points": 150
-  },
-  {
-    "text": "Which country gifted the Statue of Liberty to the United States?",
-    "answer": "France",
-    "points": 150
-  },
-  {
-    "text": "How many players are on the field for one soccer team during play?",
-    "answer": "11",
-    "points": 150
-  },
-  {
-    "text": "What is the smallest prime number?",
-    "answer": "2",
-    "points": 150
-  },
-  {
-    "text": "Which language has the most native speakers in the world?",
-    "answer": "Mandarin Chinese",
-    "points": 150
-  },
-  {
-    "text": "What year did humans first land on the Moon?",
-    "answer": "1969",
-    "points": 200
-  },
-  {
-    "text": "Which element has the atomic number 1?",
-    "answer": "Hydrogen",
-    "points": 200
-  },
-  {
-    "text": "What is the tallest mountain above sea level?",
-    "answer": "Mount Everest",
-    "points": 200
-  },
-  {
-    "text": "Who wrote the play 'Romeo and Juliet'?",
-    "answer": "William Shakespeare",
-    "points": 200
-  },
-  {
-    "text": "Which U.S. state is known as the Aloha State?",
-    "answer": "Hawaii",
-    "points": 200
-  },
-  {
-    "text": "What is the hardest natural substance on Earth?",
-    "answer": "Diamond",
+    "text": "How many all-nighters did Andy pull at NYU?",
+    "answer": "5",
     "points": 250
   },
   {
-    "text": "What is the currency of Japan?",
-    "answer": "Yen",
+    "text": "What street was Andy’s apartment on during college?",
+    "answer": "St. Marks Place",
+    "points": 200
+  },
+  {
+    "text": "What was the name of the startup that Andy was a founding designer of?",
+    "answer": "SellRaze",
+    "points": 100
+  },
+  {
+    "text": "What city did Andy study abroad in?",
+    "answer": "Paris",
+    "points": 100
+  },
+  {
+    "text": "Which country did go Andy's canyon swinging?",
+    "answer": "Switzerland",
+    "points": 200
+  },
+  {
+    "text": "Where was the 2024 University Nationals Powerlifting Championships hosted where Andy placed second?",
+    "answer": "Reno, Nevada",
     "points": 250
   },
   {
-    "text": "Which blood type is known as the universal donor?",
-    "answer": "O Negative",
-    "points": 250
-  },
-  {
-    "text": "How many bones are in the adult human body?",
-    "answer": "206",
-    "points": 250
-  },
-  {
-    "text": "Which country has the most time zones?",
-    "answer": "France",
+    "text": "Where was the 2024 World University Powerlifting Championships hosted where Andy placed fourth?",
+    "answer": "Tartu, Estonia",
     "points": 300
   },
   {
-    "text": "What is the capital of Kazakhstan?",
-    "answer": "Astana",
-    "points": 300
+    "text": "What world record did Andy break?",
+    "answer": "Bench Press",
+    "points": 200
   },
   {
-    "text": "Which scientist proposed the three laws of motion?",
-    "answer": "Isaac Newton",
-    "points": 300
-  },
-  {
-    "text": "What is the only continent without any deserts?",
-    "answer": "Europe",
+    "text": "How much weight did Andy bench for the world record?",
+    "answer": "330 lbs (150 kg)",
     "points": 350
   },
   {
-    "text": "Which planet has the most moons currently known?",
-    "answer": "Saturn",
-    "points": 350
+    "text": "Which city did Andy move to for his first in-person internship?",
+    "answer": "Boston",
+    "points": 100
   },
   {
-    "text": "What is the longest river in the world according to the most widely accepted modern measurements?",
-    "answer": "The Nile River",
-    "points": 400
+    "text": "What company did Andy intern for in Boston?",
+    "answer": "ForceFactor",
+    "points": 100
+  },
+  {
+    "text": "What Google team did Andy work on?",
+    "answer": "Searchbox and Audio Search team",
+    "points": 250
+  },
+  {
+    "text": "What was the title of the Google competition that Andy placed 1st at?",
+    "answer": "Intern Presentation Showcase",
+    "points": 200
+  },
+  {
+    "text": "What is Andy's job title at Google?",
+    "answer": "UX Designer",
+    "points": 200
+  },
+  {
+    "text": "What date does Andy move to San Francisco?",
+    "answer": "June 15th",
+    "points": 300
   }
 ]
