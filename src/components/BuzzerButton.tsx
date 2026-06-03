@@ -19,7 +19,6 @@ export function BuzzerButton({ disabled = false, locked = false, onClick }: Prop
         locked ? "buzzer-unit--locked" : ""
       }`}
     >
-      <span className="buzzer-base" aria-hidden />
       <span className="buzzer-ring" aria-hidden />
       <span className="buzzer-dome" aria-hidden>
         <span className="buzzer-gloss" />

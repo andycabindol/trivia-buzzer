@@ -4,10 +4,12 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Motion } from "@/components/Motion";
 import { PlayerAnswerReveal } from "@/components/PlayerAnswerReveal";
+import { PlayerQuestionHeader } from "@/components/PlayerQuestionHeader";
 import { PlayerBuzzQueue } from "@/components/PlayerBuzzQueue";
 import { Scoreboard } from "@/components/Scoreboard";
 import { useGameRoom } from "@/hooks/useGameRoom";
 import { emitAck } from "@/lib/socket";
+import { playBuzzSound } from "@/lib/buzz-sound";
 import { loadPlayerSession } from "@/lib/storage";
 import { canChangeTeam, getCurrentQuestion, getTeamQueuePosition } from "@/lib/types";
 import { BuzzerButton } from "@/components/BuzzerButton";
@@ -73,6 +75,7 @@ export default function PlayerPage() {
     );
     setBuzzing(false);
     if (res.ok && res.data?.position) {
+      playBuzzSound();
       setBuzzed(true);
       setQueuePosition(res.data.position);
       setTeamAlreadyQueued(Boolean(res.data.teamAlreadyQueued));
@@ -119,20 +122,20 @@ export default function PlayerPage() {
   const canBuzz = room?.buzzerOpen && !buzzed && !buzzing;
   const showBuzzer =
     !inLobby && !showAnswer && (room?.buzzerOpen || buzzed);
-  const awaitingBuzzer =
-    !!room &&
+  const showActiveQuestion =
+    !!question &&
     !showAnswer &&
+    !!room &&
     room.currentQuestionIndex >= 0 &&
-    !room.buzzerOpen &&
-    (room.status === "question" || room.status === "answering");
+    room.status !== "lobby" &&
+    room.status !== "ended";
   const betweenQuestions =
     !!room &&
     !showAnswer &&
     room.status !== "lobby" &&
     room.status !== "ended" &&
     room.currentQuestionIndex >= 0 &&
-    !showBuzzer &&
-    !awaitingBuzzer;
+    !showActiveQuestion;
 
   const teamQueuePosition =
     room && teamId ? getTeamQueuePosition(room, teamId) : null;
@@ -176,26 +179,30 @@ export default function PlayerPage() {
           </div>
         ) : showAnswer && question ? (
           <PlayerAnswerReveal question={question} />
-        ) : showBuzzer ? (
-          <div className="flex flex-1 flex-col items-center justify-center p-6">
-            <BuzzerButton
-              disabled={!canBuzz}
-              locked={buzzed}
-              onClick={handleBuzz}
-            />
-            {buzzed && teamQueuePosition !== null && room.buzzerQueue.length > 0 && (
-              <PlayerBuzzQueue
-                queue={room.buzzerQueue}
-                teamId={teamId!}
-                teamPosition={teamQueuePosition}
-              />
-            )}
-          </div>
-        ) : awaitingBuzzer ? (
-          <div className="flex flex-1 flex-col items-center justify-center p-6 text-center">
-            <p className="text-3xl font-semibold text-neutral-900">Wait for the buzzer</p>
-            <p className="mt-2 text-sm text-neutral-500">The host will open buzzing soon</p>
-          </div>
+        ) : showActiveQuestion && question ? (
+          <>
+            <PlayerQuestionHeader question={question} />
+            <div className="flex min-h-0 flex-1 flex-col items-center justify-center p-4">
+              {showBuzzer && (
+                <>
+                  <BuzzerButton
+                    disabled={!canBuzz}
+                    locked={buzzed}
+                    onClick={handleBuzz}
+                  />
+                  {buzzed &&
+                    teamQueuePosition !== null &&
+                    room.buzzerQueue.length > 0 && (
+                      <PlayerBuzzQueue
+                        queue={room.buzzerQueue}
+                        teamId={teamId!}
+                        teamPosition={teamQueuePosition}
+                      />
+                    )}
+                </>
+              )}
+            </div>
+          </>
         ) : betweenQuestions ? (
           <div className="flex flex-1 flex-col items-center justify-center gap-10 p-6">
             <p className="text-center text-4xl font-semibold text-neutral-900">

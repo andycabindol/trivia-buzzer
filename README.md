@@ -1,6 +1,6 @@
 # Trivia Buzzer — Grad Party Edition
 
-A realtime party trivia buzzer game: guests join from their phones, pick a table/team, and buzz in. The host runs the game from their phone—questions stay on the host screen only; players see the buzzer, revealed answers, and scores.
+A realtime party trivia buzzer game: guests join from their phones, pick a table/team, and buzz in. The host runs the game from their phone; players see each question before buzzing, then answers and scores when revealed.
 
 ## Quick start
 
@@ -22,9 +22,9 @@ Open [http://localhost:3000](http://localhost:3000).
 
 1. **Host** opens `/host` on their phone (runs the game server when self-hosting locally).
 2. **Players** go to `/join`, pick a table, and enter their name.
-3. Host adds questions, starts the game, taps **Next question** (only the host sees the question), then **Enable buzzer** when ready.
+3. Host adds questions, starts the game, taps **Next question**, then **Enable buzzer** when ready. Players see the question and point value while waiting to buzz.
 4. Players tap the big red buzzer to join the queue (first buzz per **table/team** counts; teammates can still tap but only lock in their team’s slot).
-5. Host marks **Correct** (team gets points) or **Incorrect** (next in queue gets a turn). Players see the **answer** on their phones when it is revealed—not the question text.
+5. Host marks **Correct** (team gets points) or **Incorrect** (next in queue gets a turn). Players see the **answer** when it is revealed.
 6. Host **holds “Show scores”** to flash a full-screen scoreboard on every player’s phone (their table is highlighted).
 7. Host **Choose winner** when the game ends—players see the result on their phones too.
 
