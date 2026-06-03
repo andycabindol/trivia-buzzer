@@ -1,13 +1,127 @@
 [
   {
-    "text": "Example: What is Andy's favorite city?",
-    "answer": "New York",
-    "points": 100,
-    "image": "example.jpg"
+    "text": "What is the capital of Australia?",
+    "answer": "Canberra",
+    "points": 100
   },
   {
-    "text": "Example: What year did Andy graduate?",
-    "answer": "2026",
+    "text": "Which planet is known as the Red Planet?",
+    "answer": "Mars",
+    "points": 100
+  },
+  {
+    "text": "How many sides does a hexagon have?",
+    "answer": "6",
+    "points": 100
+  },
+  {
+    "text": "What is the largest ocean on Earth?",
+    "answer": "Pacific Ocean",
+    "points": 100
+  },
+  {
+    "text": "Who painted the Mona Lisa?",
+    "answer": "Leonardo da Vinci",
+    "points": 100
+  },
+  {
+    "text": "What is the chemical symbol for gold?",
+    "answer": "Au",
     "points": 150
+  },
+  {
+    "text": "Which country gifted the Statue of Liberty to the United States?",
+    "answer": "France",
+    "points": 150
+  },
+  {
+    "text": "How many players are on the field for one soccer team during play?",
+    "answer": "11",
+    "points": 150
+  },
+  {
+    "text": "What is the smallest prime number?",
+    "answer": "2",
+    "points": 150
+  },
+  {
+    "text": "Which language has the most native speakers in the world?",
+    "answer": "Mandarin Chinese",
+    "points": 150
+  },
+  {
+    "text": "What year did humans first land on the Moon?",
+    "answer": "1969",
+    "points": 200
+  },
+  {
+    "text": "Which element has the atomic number 1?",
+    "answer": "Hydrogen",
+    "points": 200
+  },
+  {
+    "text": "What is the tallest mountain above sea level?",
+    "answer": "Mount Everest",
+    "points": 200
+  },
+  {
+    "text": "Who wrote the play 'Romeo and Juliet'?",
+    "answer": "William Shakespeare",
+    "points": 200
+  },
+  {
+    "text": "Which U.S. state is known as the Aloha State?",
+    "answer": "Hawaii",
+    "points": 200
+  },
+  {
+    "text": "What is the hardest natural substance on Earth?",
+    "answer": "Diamond",
+    "points": 250
+  },
+  {
+    "text": "What is the currency of Japan?",
+    "answer": "Yen",
+    "points": 250
+  },
+  {
+    "text": "Which blood type is known as the universal donor?",
+    "answer": "O Negative",
+    "points": 250
+  },
+  {
+    "text": "How many bones are in the adult human body?",
+    "answer": "206",
+    "points": 250
+  },
+  {
+    "text": "Which country has the most time zones?",
+    "answer": "France",
+    "points": 300
+  },
+  {
+    "text": "What is the capital of Kazakhstan?",
+    "answer": "Astana",
+    "points": 300
+  },
+  {
+    "text": "Which scientist proposed the three laws of motion?",
+    "answer": "Isaac Newton",
+    "points": 300
+  },
+  {
+    "text": "What is the only continent without any deserts?",
+    "answer": "Europe",
+    "points": 350
+  },
+  {
+    "text": "Which planet has the most moons currently known?",
+    "answer": "Saturn",
+    "points": 350
+  },
+  {
+    "text": "What is the longest river in the world according to the most widely accepted modern measurements?",
+    "answer": "The Nile River",
+    "points": 400
   }
 ]

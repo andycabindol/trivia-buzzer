@@ -9,7 +9,8 @@ import { Scoreboard } from "@/components/Scoreboard";
 import { useGameRoom } from "@/hooks/useGameRoom";
 import { emitAck } from "@/lib/socket";
 import { loadPlayerSession } from "@/lib/storage";
-import { getCurrentQuestion, getTeamQueuePosition } from "@/lib/types";
+import { canChangeTeam, getCurrentQuestion, getTeamQueuePosition } from "@/lib/types";
+import { ChangeTeamButton } from "@/components/ChangeTeamButton";
 
 export default function PlayerPage() {
   const router = useRouter();
@@ -113,6 +114,7 @@ export default function PlayerPage() {
 
   const inLobby =
     !room || room.currentQuestionIndex < 0 || room.status === "lobby";
+  const allowChangeTeam = !!room && canChangeTeam(room);
   const canBuzz = room?.buzzerOpen && !buzzed && !buzzing;
   const showBuzzer =
     !inLobby && !showAnswer && (room?.buzzerOpen || buzzed);
@@ -200,13 +202,16 @@ export default function PlayerPage() {
             </div>
           </div>
         ) : (
-          <div className="flex flex-1 flex-col items-center justify-center p-6 text-center">
+          <div className="flex flex-1 flex-col items-center justify-center gap-4 p-6 text-center">
             <Motion variant="fade-up">
               <p className="text-4xl font-semibold text-neutral-900">You&apos;re in! 🎉</p>
             </Motion>
-            <Motion variant="fade-in" delay={90} className="mt-2">
+            <Motion variant="fade-in" delay={90}>
               <p className="text-sm text-neutral-500">Waiting for others to join</p>
             </Motion>
+            {allowChangeTeam && (
+              <ChangeTeamButton onClick={() => router.push("/join?changeTeam=1")} />
+            )}
           </div>
         )}
       </div>

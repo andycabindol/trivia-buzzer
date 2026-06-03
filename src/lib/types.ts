@@ -90,3 +90,8 @@ export function getTeamQueuePosition(room: RoomState, teamId: string): number | 
   const index = room.buzzerQueue.findIndex((b) => b.teamId === teamId);
   return index === -1 ? null : index + 1;
 }
+
+/** True until the host shows the first question (lobby or game started, no question yet). */
+export function canChangeTeam(room: RoomState): boolean {
+  return room.status !== "ended" && room.currentQuestionIndex < 0;
+}

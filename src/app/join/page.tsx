@@ -1,19 +1,22 @@
 "use client";
 
 import { Suspense, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
+import { ChangeTeamButton } from "@/components/ChangeTeamButton";
 import { Motion } from "@/components/Motion";
 import { useGameRoom } from "@/hooks/useGameRoom";
 import { motionStaggerDelay } from "@/lib/animations";
 import { emitAck } from "@/lib/socket";
 import { loadPlayerSession, savePlayerSession } from "@/lib/storage";
+import { canChangeTeam } from "@/lib/types";
 import type { Team } from "@/lib/types";
 
 type Step = "team" | "name";
 
 function JoinFlow() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { room, joinRoom, error } = useGameRoom();
 
   const [step, setStep] = useState<Step>("team");
@@ -31,6 +34,14 @@ function JoinFlow() {
     const session = loadPlayerSession();
     if (session) setPlayerName(session.playerName);
   }, [joinRoom]);
+
+  useEffect(() => {
+    if (!room || searchParams.get("changeTeam") !== "1") return;
+    if (!canChangeTeam(room)) return;
+    setStep("team");
+    setSelectedTeam(null);
+    setLocalError(null);
+  }, [room, searchParams]);
 
   const handleJoin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,6 +65,8 @@ function JoinFlow() {
     });
     router.push("/player");
   };
+
+  const allowChangeTeam = room ? canChangeTeam(room) : true;
 
   if (!ready || !room) {
     return (
@@ -111,8 +124,19 @@ function JoinFlow() {
         {step === "name" && selectedTeam && (
           <Motion key="join-name" variant="fade-up">
             <form onSubmit={handleJoin} className="space-y-4">
-              <Motion variant="fade-down">
+              <Motion variant="fade-down" className="space-y-2">
                 <p className="text-center text-neutral-500">{selectedTeam.name}</p>
+                {allowChangeTeam && (
+                  <div className="flex justify-center">
+                    <ChangeTeamButton
+                      onClick={() => {
+                        setStep("team");
+                        setSelectedTeam(null);
+                        setLocalError(null);
+                      }}
+                    />
+                  </div>
+                )}
               </Motion>
               <Motion variant="fade-up" delay={50}>
                 <input
@@ -126,18 +150,6 @@ function JoinFlow() {
               <Motion variant="fade-up" delay={100}>
                 <button type="submit" disabled={loading} className="btn btn-primary">
                   Join
-                </button>
-              </Motion>
-              <Motion variant="fade-in" delay={140}>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setStep("team");
-                    setSelectedTeam(null);
-                  }}
-                  className="w-full text-sm text-neutral-500 underline"
-                >
-                  Back
                 </button>
               </Motion>
             </form>

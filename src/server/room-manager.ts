@@ -143,6 +143,9 @@ export function joinPlayer(
   teamId: string
 ): { ok: boolean; player?: Player; error?: string } {
   const room = getRoom();
+  if (room.status === "ended" || room.currentQuestionIndex >= 0) {
+    return { ok: false, error: "Cannot change team after the game has started" };
+  }
   const team = room.teams.find((t) => t.id === teamId);
   if (!team) return { ok: false, error: "Team not found" };
   const trimmed = name.trim();
