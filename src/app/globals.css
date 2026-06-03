@@ -147,9 +147,36 @@ body {
     );
     opacity: 0.85;
   }
+
+  .podium-gold {
+    border: 2px solid #f5c542;
+    box-shadow:
+      0 0 0 1px rgba(245, 197, 66, 0.35),
+      0 0 18px rgba(245, 197, 66, 0.55),
+      0 0 32px rgba(245, 197, 66, 0.25);
+  }
+
+  .podium-silver {
+    border: 2px solid #c8cdd4;
+    box-shadow:
+      0 0 0 1px rgba(200, 205, 212, 0.4),
+      0 0 18px rgba(192, 198, 210, 0.5),
+      0 0 32px rgba(180, 188, 200, 0.22);
+  }
+
+  .podium-bronze {
+    border: 2px solid #d4894a;
+    box-shadow:
+      0 0 0 1px rgba(212, 137, 74, 0.35),
+      0 0 18px rgba(205, 127, 50, 0.5),
+      0 0 32px rgba(180, 100, 40, 0.22);
+  }
 }
 
 @media (prefers-reduced-motion: no-preference) {
+  .points-pop {
+    animation: points-pop 1.15s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
   .motion-fade-in {
     animation: motion-fade-in 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
   }
@@ -191,5 +218,24 @@ body {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes points-pop {
+  0% {
+    opacity: 0;
+    transform: translateY(24px) scale(0.55);
+  }
+  12% {
+    opacity: 1;
+    transform: translateY(0) scale(1.12);
+  }
+  28% {
+    opacity: 1;
+    transform: translateY(-8px) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-72px) scale(0.95);
   }
 }

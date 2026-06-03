@@ -4,7 +4,10 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Motion } from "@/components/Motion";
 import { PlayerAnswerReveal } from "@/components/PlayerAnswerReveal";
+import { PlayerGameEndScreen } from "@/components/PlayerGameEndScreen";
+import { PointsPopOverlay } from "@/components/PointsPopOverlay";
 import { PlayerQuestionHeader } from "@/components/PlayerQuestionHeader";
+import { PlayerStatusBar } from "@/components/PlayerStatusBar";
 import { PlayerBuzzQueue } from "@/components/PlayerBuzzQueue";
 import { Scoreboard } from "@/components/Scoreboard";
 import { useGameRoom } from "@/hooks/useGameRoom";
@@ -23,7 +26,9 @@ export default function PlayerPage() {
   const [queuePosition, setQueuePosition] = useState<number | null>(null);
   const [teamAlreadyQueued, setTeamAlreadyQueued] = useState(false);
   const [buzzing, setBuzzing] = useState(false);
-  const [pointsToast, setPointsToast] = useState<number | null>(null);
+  const [pointsToast, setPointsToast] = useState<{ amount: number; id: number } | null>(
+    null
+  );
   const toastTimeoutRef = useRef<number | null>(null);
   const lastTeamScoreRef = useRef<number | null>(null);
 
@@ -97,9 +102,9 @@ export default function PlayerPage() {
     lastTeamScoreRef.current = team.score;
     if (delta <= 0) return;
 
-    setPointsToast(delta);
+    setPointsToast({ amount: delta, id: Date.now() });
     if (toastTimeoutRef.current) window.clearTimeout(toastTimeoutRef.current);
-    toastTimeoutRef.current = window.setTimeout(() => setPointsToast(null), 1600);
+    toastTimeoutRef.current = window.setTimeout(() => setPointsToast(null), 1200);
   }, [room?.teams, teamId, room]);
 
   useEffect(() => {
@@ -152,31 +157,27 @@ export default function PlayerPage() {
         </div>
       )}
 
-      <div className="border-b border-neutral-200 px-4 py-3 text-center text-sm text-neutral-500">
-        {session.playerName} · {session.teamName}
-      </div>
+      <PlayerStatusBar
+        playerName={session.playerName}
+        teamName={session.teamName}
+        teamId={session.teamId}
+        room={room}
+      />
 
       <div className="flex min-h-0 flex-1 flex-col">
         {pointsToast !== null && !room?.showScoresOverlay && (
-          <div className="pointer-events-none fixed left-1/2 top-5 z-40 -translate-x-1/2">
-            <div className="rounded-full bg-emerald-50 px-4 py-2 text-center text-lg font-semibold text-emerald-700 shadow-sm">
-              +{pointsToast} points!
-            </div>
-          </div>
+          <PointsPopOverlay
+            points={pointsToast.amount}
+            animationKey={pointsToast.id}
+          />
         )}
 
         {room?.status === "ended" && winnerTeam ? (
-          <div className="flex flex-1 flex-col items-center justify-center gap-4 p-6 text-center">
-            <p className="text-lg font-medium tabular-nums text-amber-600">
-              {winnerTeam.score} points
-            </p>
-            <p className="text-2xl font-semibold">
-              Team {winnerTeam.name} knows {room.honoreeName} best!
-            </p>
-            {session.teamId === winnerTeam.id && (
-              <p className="text-neutral-500">That&apos;s your table!</p>
-            )}
-          </div>
+          <PlayerGameEndScreen
+            room={room}
+            winnerTeam={winnerTeam}
+            sessionTeamId={session.teamId}
+          />
         ) : showAnswer && question ? (
           <PlayerAnswerReveal question={question} />
         ) : showActiveQuestion && question ? (

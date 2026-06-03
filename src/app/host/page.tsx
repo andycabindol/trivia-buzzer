@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { HoldToShowScores } from "@/components/HoldToShowScores";
+import { HostChooseWinner } from "@/components/HostChooseWinner";
 import { Scoreboard } from "@/components/Scoreboard";
 import { useGameRoom } from "@/hooks/useGameRoom";
 import { emitAck } from "@/lib/socket";
@@ -176,37 +177,14 @@ export default function HostPage() {
               Choose winner
             </button>
           ) : (
-            <div className="col-span-2 space-y-2">
-              <p className="text-center text-sm font-medium">Pick winning table</p>
-              {room.teams.map((team) => {
-                const members = room.players.filter((p) => p.teamId === team.id);
-                return (
-                  <button
-                    key={team.id}
-                    type="button"
-                    onClick={() => {
-                      act("winner:choose", { teamId: team.id });
-                      setChoosingWinner(false);
-                    }}
-                    className="btn w-full text-left"
-                  >
-                    <span className="font-semibold">{team.name}</span>
-                    {members.length > 0 && (
-                      <span className="mt-1 block text-sm font-normal text-neutral-500">
-                        {members.map((p) => p.name).join(", ")}
-                      </span>
-                    )}
-                  </button>
-                );
-              })}
-              <button
-                type="button"
-                onClick={() => setChoosingWinner(false)}
-                className="w-full text-sm text-neutral-500 underline"
-              >
-                Cancel
-              </button>
-            </div>
+            <HostChooseWinner
+              room={room}
+              onChoose={(teamId) => {
+                act("winner:choose", { teamId });
+                setChoosingWinner(false);
+              }}
+              onCancel={() => setChoosingWinner(false)}
+            />
           )}
           <HoldToShowScores />
         </div>

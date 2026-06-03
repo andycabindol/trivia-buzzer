@@ -95,3 +95,10 @@ export function getTeamQueuePosition(room: RoomState, teamId: string): number | 
 export function canChangeTeam(room: RoomState): boolean {
   return room.status !== "ended" && room.currentQuestionIndex < 0;
 }
+
+/** 1 = highest score. Ties keep list order after sort by score descending. */
+export function getTeamRank(room: RoomState, teamId: string): number | null {
+  const sorted = [...room.teams].sort((a, b) => b.score - a.score);
+  const index = sorted.findIndex((t) => t.id === teamId);
+  return index === -1 ? null : index + 1;
+}
