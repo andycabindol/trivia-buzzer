@@ -10,6 +10,7 @@ import { useGameRoom } from "@/hooks/useGameRoom";
 import { emitAck } from "@/lib/socket";
 import { loadPlayerSession } from "@/lib/storage";
 import { canChangeTeam, getCurrentQuestion, getTeamQueuePosition } from "@/lib/types";
+import { BuzzerButton } from "@/components/BuzzerButton";
 import { ChangeTeamButton } from "@/components/ChangeTeamButton";
 
 export default function PlayerPage() {
@@ -118,13 +119,20 @@ export default function PlayerPage() {
   const canBuzz = room?.buzzerOpen && !buzzed && !buzzing;
   const showBuzzer =
     !inLobby && !showAnswer && (room?.buzzerOpen || buzzed);
+  const awaitingBuzzer =
+    !!room &&
+    !showAnswer &&
+    room.currentQuestionIndex >= 0 &&
+    !room.buzzerOpen &&
+    (room.status === "question" || room.status === "answering");
   const betweenQuestions =
     !!room &&
     !showAnswer &&
     room.status !== "lobby" &&
     room.status !== "ended" &&
     room.currentQuestionIndex >= 0 &&
-    !showBuzzer;
+    !showBuzzer &&
+    !awaitingBuzzer;
 
   const teamQueuePosition =
     room && teamId ? getTeamQueuePosition(room, teamId) : null;
@@ -170,16 +178,11 @@ export default function PlayerPage() {
           <PlayerAnswerReveal question={question} />
         ) : showBuzzer ? (
           <div className="flex flex-1 flex-col items-center justify-center p-6">
-            <button
-              type="button"
+            <BuzzerButton
               disabled={!canBuzz}
+              locked={buzzed}
               onClick={handleBuzz}
-              className={`flex h-[min(70vw,280px)] w-[min(70vw,280px)] items-center justify-center rounded-full text-2xl font-bold transition active:scale-95 ${
-                canBuzz ? "bg-red-600 text-white" : "bg-neutral-200 text-neutral-500"
-              }`}
-            >
-              {buzzed ? "Locked" : "Buzz"}
-            </button>
+            />
             {buzzed && teamQueuePosition !== null && room.buzzerQueue.length > 0 && (
               <PlayerBuzzQueue
                 queue={room.buzzerQueue}
@@ -187,6 +190,11 @@ export default function PlayerPage() {
                 teamPosition={teamQueuePosition}
               />
             )}
+          </div>
+        ) : awaitingBuzzer ? (
+          <div className="flex flex-1 flex-col items-center justify-center p-6 text-center">
+            <p className="text-3xl font-semibold text-neutral-900">Wait for the buzzer</p>
+            <p className="mt-2 text-sm text-neutral-500">The host will open buzzing soon</p>
           </div>
         ) : betweenQuestions ? (
           <div className="flex flex-1 flex-col items-center justify-center gap-10 p-6">

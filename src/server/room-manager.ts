@@ -260,8 +260,8 @@ export function showNextQuestion(): { ok: boolean; error?: string } {
     return { ok: false, error: "No more questions" };
   }
   room.currentQuestionIndex += 1;
-  room.buzzerOpen = true;
-  room.status = "buzzer_open";
+  room.buzzerOpen = false;
+  room.status = "question";
   room.buzzerQueue = [];
   room.currentQueueIndex = 0;
   room.feedback = null;
@@ -273,8 +273,14 @@ export function showNextQuestion(): { ok: boolean; error?: string } {
 
 export function openBuzzer(): { ok: boolean; error?: string } {
   const room = getRoom();
-  if (room.status !== "question" && room.status !== "answering") {
+  if (room.currentQuestionIndex < 0) {
     return { ok: false, error: "Show a question first" };
+  }
+  if (room.buzzerOpen) {
+    return { ok: false, error: "Buzzer is already open" };
+  }
+  if (room.status !== "question" && room.status !== "answering") {
+    return { ok: false, error: "Cannot open buzzer right now" };
   }
   room.buzzerOpen = true;
   room.status = "buzzer_open";

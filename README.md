@@ -22,7 +22,7 @@ Open [http://localhost:3000](http://localhost:3000).
 
 1. **Host** opens `/host` on their phone (runs the game server when self-hosting locally).
 2. **Players** go to `/join`, pick a table, and enter their name.
-3. Host adds questions, starts the game, and taps **Next question** (only the host sees the question).
+3. Host adds questions, starts the game, taps **Next question** (only the host sees the question), then **Enable buzzer** when ready.
 4. Players tap the big red buzzer to join the queue (first buzz per **table/team** counts; teammates can still tap but only lock in their team’s slot).
 5. Host marks **Correct** (team gets points) or **Incorrect** (next in queue gets a turn). Players see the **answer** on their phones when it is revealed—not the question text.
 6. Host **holds “Show scores”** to flash a full-screen scoreboard on every player’s phone (their table is highlighted).

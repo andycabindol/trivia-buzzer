@@ -134,9 +134,23 @@ export default function HostPage() {
             </button>
           ) : inGame ? (
             <>
-              <button onClick={() => act("game:next-question")} className="btn btn-primary col-span-2">
+              <button
+                onClick={() => act("game:next-question")}
+                disabled={room.buzzerOpen}
+                className="btn btn-primary col-span-2 disabled:opacity-40"
+              >
                 Next question
               </button>
+              {room.currentQuestionIndex >= 0 &&
+                !room.buzzerOpen &&
+                (room.status === "question" || room.status === "answering") && (
+                  <button
+                    onClick={() => act("buzzer:open")}
+                    className="btn btn-primary col-span-2"
+                  >
+                    Enable buzzer
+                  </button>
+                )}
               <button
                 onClick={() => act("answer:correct")}
                 disabled={!answerer}
