@@ -90,9 +90,14 @@
     "points": 100
   },
   {
+    "text": "What company did Andy get a full-time offer from?",
+    "answer": "Google",
+    "points": 100
+  },
+  {
     "text": "What Google team did Andy work on?",
     "answer": "Searchbox and Audio Search team",
-    "points": 250
+    "points": 400
   },
   {
     "text": "What was the title of the Google competition that Andy placed 1st at?",
@@ -103,6 +108,11 @@
     "text": "What is Andy's job title at Google?",
     "answer": "UX Designer",
     "points": 200
+  },
+  {
+    "text": "Where is Andy relocating for his full-time job?",
+    "answer": "San Francisco",
+    "points": 300
   },
   {
     "text": "What date does Andy move to San Francisco?",
