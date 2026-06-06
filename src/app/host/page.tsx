@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { HoldToShowScores } from "@/components/HoldToShowScores";
+import { HostBuzzQueue } from "@/components/HostBuzzQueue";
 import { HostChooseWinner } from "@/components/HostChooseWinner";
 import { Scoreboard } from "@/components/Scoreboard";
 import { useGameRoom } from "@/hooks/useGameRoom";
@@ -121,12 +122,18 @@ export default function HostPage() {
           </div>
         )}
 
-        {answerer && (
+        {room.buzzerQueue.length > 0 ? (
+          <HostBuzzQueue
+            queue={room.buzzerQueue}
+            currentQueueIndex={room.currentQueueIndex}
+            status={room.status}
+          />
+        ) : answerer ? (
           <p className="text-center text-lg">
             {answerer.teamName}{" "}
             <span className="text-neutral-400">·</span> {answerer.playerName}
           </p>
-        )}
+        ) : null}
 
         <div className="grid grid-cols-2 gap-2">
           {room.status === "lobby" ? (
